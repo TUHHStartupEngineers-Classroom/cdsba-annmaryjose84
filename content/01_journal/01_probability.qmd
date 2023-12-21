@@ -1,97 +1,160 @@
 ---
 title: "Probability Theory"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+# Assignment I
 
-This is a `.qmd` file. It is plain text with special features. Any time you write just like this, it will be compiled to normal text in the website. If you put a \# in front of your text, it will create a top level-header.
+Let T = on time 
 
-To learn more about Quarto websites visit <https://quarto.org/docs/websites>.
+$\bar{T}\\$= not on time 
 
-# Text Formatting
+S = change in scope 
 
-*italics* and **bold**
+$\bar{S}\\$= no change in scope
 
-superscript^2^ / subscript~2~
+[![Caption](../../assets/img/01_tree.png)]{width=5%}
 
-~~strikethrough~~
+From the figure, we know that,
 
-`verbatim code`
+P(S)= 0.3
 
-> Blockquote
+P(T/S) = 0.2 
 
-# Headings
+P($\bar{T}\\$/S)= 0.8
 
-## Header 2
-### Header 3
-#### Header 4
-##### Header 5
-###### Header 6
+p($\bar{S}\\$) = 0.7
 
-# Links & Images
+P(T/$\bar{S}\\$)= 0.6
 
-<https://quarto.org>
+P($\bar{T}\\$/$\bar{S}\\$)= 0.4
 
-[Quarto](https://quarto.org)
+Using above we can compute below:
 
-![Caption](../../assets/img/elephant.png)
+1.  $P(T\cap S) = P(T/S) \cdot P(S) = 0.2*0.3 = 0.06$
 
-[![Caption](../../assets/img/elephant.png)](https://quarto.org)
+2.  $P(T \cap \bar{S}\\) = P(T/\bar{S}\\) \cdot P(\bar{S}\\) = 0.6*0.7 = 0.42$
 
-[![Caption](../../assets/img/elephant.png)](https://quarto.org "An elephant")
+3.  $P(\bar{T} \cap {S}\\) = P(\bar{T}\\/S) \cdot P(S)\\ = 0.8*0.3 = 0.24$
 
+4.  $P(\bar{T} \cap \bar{S} \\) = P(\bar{T}\\/\bar{S}\\) \cdot P(\bar{S}\\) = 0.4*0.7 = 0.28$
 
-# Lists
+sum of all probabilities = 0.06+0.42+0.24+0.28 = 1
 
-* unordered list
-    + sub-item 1
-    + sub-item 2
-        - sub-sub-item 1
-        
-*   item 2
-
-    Continued (indent 4 spaces)
-    
-    
-1. ordered list
-2. item 2
-    i) sub-item 1
-         A.  sub-sub-item 1
-         
-(@)  A list whose numbering
-
-continues after
-
-(@)  an interruption
-
-# Tables
-
-| Right | Left | Default | Center |
-|------:|:-----|---------|:------:|
-|   12  |  12  |    12   |    12  |
-|  123  |  123 |   123   |   123  |
-|    1  |    1 |     1   |     1  |
-
-# Source Code
-
-Use ``` to delimit blocks of source code:
-
-```
-code
-```
-
-Add a language to syntax highlight code blocks:
+## Source Code
 
 ```{r}
-1 + 1
+# Given probabilities
+prob_S <- 0.3
+Prob_T_given_S <- 0.2
+Prob_Tbar_given_S <- 0.8
+prob_Sbar <- 0.7
+Prob_T_given_Sbar <- 0.6
+Prob_Tbar_given_Sbar <- 0.4
+
+# Calculating required probabilities
+Prob_T_and_S <- Prob_T_given_S * prob_S
+Prob_T_and_Sbar <- Prob_T_given_Sbar * prob_Sbar
+Prob_Tbar_and_S <- Prob_Tbar_given_S * prob_S
+Prob_Tbar_and_Sbar <- Prob_Tbar_given_Sbar * prob_Sbar
+
+
+# Print the result
+cat("P(T ∩ S) =", Prob_T_and_S, "\n")
+cat("P(T ∩ S') =", Prob_T_and_Sbar, "\n")
+cat("P(T' ∩ S) =", Prob_Tbar_and_S, "\n")
+cat("P(T' ∩ S') =", Prob_Tbar_and_Sbar, "\n")
+
+# Sum 
+
+cat("Sum=", Prob_T_and_S+Prob_T_and_Sbar+Prob_Tbar_and_S+Prob_Tbar_and_Sbar, "\n")
+
 ```
 
-```{r}
-cars
-```
+# Assignment 2
+
+[![Fig 2](../../assets/img/01_vd.png)]{ width=300 }
+
+Using this venn diagram, we can compute the following:
+
+1. Percentage of customers using all three devices = $P(Smartphone \cap Tablet \cap Computer) = 0.5 \%$
+
+2. Percentage of customers using at least two devices = $P(Smartphone \cap Tablet) +P(Smartphone \cap Computer)+P(Computer \cap Tablet) = 7.3 +8.8+3.3+0.5 = 19.9 \%$
+
+3. Percentage of customers using only one device = $P(Smartphone) +P(Computer)+P(Tablet) = 42.3+10+27.8 = 80.1 \%$
+
+## Source code
 
 ```{r}
-plot(cars)
+# Given percentages
+P_Smartphone <- 42.3 
+P_Tablet <- 27.8 
+P_Computer <- 10 
+
+P_Smartphone_and_Tablet_and_Computer <- 0.5 
+P_Smartphone_and_Tablet <- 7.3 
+P_Smartphone_and_Computer <- 8.8 
+P_Computer_and_Tablet <- 3.3 
+
+# Calculating percentages
+P_all_three_devices <- P_Smartphone_and_Tablet_and_Computer
+P_at_least_two_devices <- P_Smartphone_and_Tablet + P_Smartphone_and_Computer + P_Computer_and_Tablet+P_Smartphone_and_Tablet_and_Computer
+P_only_one_device <- P_Smartphone + P_Computer + P_Tablet
+
+# Printing results
+cat("1. Percentage of customers using all three devices =", P_all_three_devices, "%\n")
+cat("2. Percentage of customers using at least two devices =", P_at_least_two_devices, "%\n")
+cat("3. Percentage of customers using only one device =", P_only_one_device, "%\n")
+
+
+```
+
+# Assignment 3
+
+Given
+
+A : Product is faulty  
+ 
+$\bar{A}$: Product is flawless
+
+B: Alarm is triggered  
+ 
+$\bar{B}$: No alarm
+
+$P(B/A) = 0.97$
+
+$P(B/\bar{A}) = 0.01$
+
+$P(A) = 0.04$
+
+$P(\bar{A}) = 1-0.04 = 0.96$
+
+Using above we can find below
+
+1. Probability that when the alarm is triggered the product is found to be flawless = $P(\bar{A}/B)=\frac{P(B/\bar{A}) \cdot P(\bar{A})}{P(B/\bar{A}) \cdot P(\bar{A})+P(B/A) \cdot P(A)}= \frac{0.01*0.96}{0.01*0.96+0.97*0.04} = 0.198$
+
+2. Probability that when the alarm is triggered the product is found to have flaws = $P(A/B)=\frac{P(B/A) \cdot P(A)}{P(B/A) \cdot P(A))+P(B/\bar{A}) \cdot P(\bar{A})}= \frac{0.97*0.04}{0.97*0.04+0.01*0.96} = 0.802$
+
+These results show that in case the alarm is triggered, there is a possibility of about 19.8% that the product is flawless and a probability of 80.2% that the product is faulty.
+
+
+## Source code
+```{r}
+# Given probabilities
+P_B_given_A <- 0.97
+P_B_given_Abar <- 0.01
+P_A <- 0.04
+P_Abar <- 1 - P_A
+cat("P_Abar",P_Abar)
+
+# Calculate the probability
+P_Abar_given_B <- (P_B_given_Abar * P_Abar) / (P_B_given_Abar * P_Abar + P_B_given_A * P_A)
+P_A_given_B <- (P_B_given_A * P_A) / (P_B_given_A * P_A + P_B_given_Abar * P_Abar)
+
+#Display result
+cat("1. Probability that when the alarm is triggered the product is found to be flawless =", P_Abar_given_B, "\n")
+cat("2. Probability that when the alarm is triggered the product is found to have flaws =", P_A_given_B, "\n")
+
+cat("These results show that in case the alarm is triggered, there is a possibility of about 19.8% that the product is flawless and a probability of 80.2% that the product is faulty.")
+
 ```
