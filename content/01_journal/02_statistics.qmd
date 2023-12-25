@@ -1,7 +1,85 @@
 ---
 title: "Statistical Concepts"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+# Assignment 
+
+Load the table random_vars.rds and get an overview of what it contains with View(random_vars)
+
+```{r}
+random_vars <- readRDS("../../Causal_Data_Science_Data/random_vars.rds")
+View(random_vars)
+
+```
+
+1.  For each variable, compute the following values.
+
+    1.  expected value
+
+    2.  variance
+
+    3.  standard deviation
+
+```{r}
+
+#  1. Expected value
+expected_value_age <- mean(random_vars$age)
+expected_value_income <- mean(random_vars$income)
+cat("expected_value_age:", expected_value_age, "\n","expected_value_income :",expected_value_income ,"\n")
+
+# 2. variance
+
+variance_age <- var(random_vars$age)
+variance_income <- var(random_vars$income)
+cat("variance_age :",variance_age ,"\n" ,"variance_income :",variance_income,"\n")
+
+# 3. standard deviation
+
+sd_age <- sd(random_vars$age)
+sd_income <-  sd(random_vars$income)
+cat("sd_age :",sd_age ,"\n","sd_income :",sd_income,"\n")
+
+```
+
+2.  Explain, if it makes sense to compare the standard deviations?
+
+The standard deviation is a measure of the spread or dispersion of values around the mean. Here we have the variables that have different units: age and income. Age is typically measured in years, while income is measured in currency. Since these variables have different units, direct comparison of their standard deviations may not be meaningful.
+
+3.  Then, examine the relationship between both variables and compute:
+
+    1.  covariance
+    2.  correlation
+
+    ```{r}
+    # Compute covariance and correlation
+    covariance <- cov(random_vars$age, random_vars$income)
+    correlation <- cor(random_vars$age, random_vars$income)
+
+    cat("covariance :",covariance ,"\n","correlation :",correlation,"\n")
+    ```
+
+4.  What measure is easier to interpret? Please discuss your interpretation ?
+
+The correlation is easier to interpret because it is a standardized measure that ranges between -1 and 1. Covariance is not as easy to interpret as correlation primarily because it is influenced by the original units of the variable.
+
+5.   Compute the conditional expected value for:
+      1. E[income|age <= 18]
+      2. E[income|age ∈(18, 65)]
+      3. E[income|age >= 65]
+      
+```{r}
+# 1. E[income|age <= 18]
+conditional_expected_value_1 <- mean(random_vars$income[random_vars$age <= 18])
+
+# 2. E[income|age ∈(18, 65)]
+conditional_expected_value_2 <- mean(random_vars$income[random_vars$age >= 18 & random_vars$age < 65])
+
+# 3. E[income|age >= 65]
+conditional_expected_value_3 <- mean(random_vars$income[random_vars$age >= 65])
+
+cat(" conditional_expected_value_1",conditional_expected_value_1,"\n","conditional_expected_value_2",conditional_expected_value_2,"\n","conditional_expected_value_3",conditional_expected_value_3)
+
+
+
+```
