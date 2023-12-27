@@ -1,7 +1,88 @@
 ---
 title: "Regression and Statistical Inference"
+author: "Annmary Jose"
 ---
+# Assignment 
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+1.  Read the data and check the dimensions. How many rows and how many columns does the data have?
+
+```{r}
+
+# Read data set.
+df <- readRDS("../../Causal_Data_Science_Data/car_prices.rds")
+dimension <- dim(df)
+cat(" Number of rows:", dimension[1], "\n","Number of columns:", dimension[2], "\n")
+```
+
+2.  Use appropriate commands to get a more detailed look at the data. What data types do you see? How do numbers differ from strings regarding their data type?
+
+    ```{r}
+
+    library(tidyverse)
+
+    install.packages("dplyr")
+    library(dplyr)
+
+    head(df)
+    # Get glimpse of data
+    glimpse(df)
+    summary(df)
+
+    ```
+
+3.  Run a linear regression. You want to explain what factors are relevant for the pricing of a car.
+
+    ```{r}
+
+    l_r <- lm(price ~ .,data = df)
+    summary(l_r)
+
+    ```
+
+4.  Choose one regressor and
+
+    1.  explain what data type it is and what values it can take on
+
+    2.  what effect is has on the price and what changing the value would have as a result
+
+    3.  whether its effect is statistically significant.
+
+```{r}
+# Run a linear regression with mileage as a predictor for price
+model <- lm(price ~ enginesize, data = df)
+
+# Print the summary of the regression model
+summary(model)
+
+# 1. Data Type and Values
+ data_type= class(df$enginesize)
+
+```
+
+1.  Data Type and Values
+
+    Regressor choosed was enginesize whose data type is numeric and it takes numeric values
+
+2.  Effect on Price
+
+    The coefficient for enginesize is 170.064 and it has a poitive effect on price. when enginesize increases price also increases
+
+3.  Statistical Significance
+
+    The p-value associated with the enginesize coefficient \<2e-16. This extremely small p-value indicating that the enginesize coefficient is statistically significant.
+
+5.  Add a variable `seat_heating` to the data and assign a value `TRUE` for all observations.
+
+    ```{r}
+    car_data_new <- df %>% 
+      mutate(seat_heating = TRUE)
+
+
+    # Run a regression with the new variable
+    model_with_seat_heating <- lm(price ~  seat_heating, data = car_data_new)
+
+    # Print the summary of the regression model
+    summary(model_with_seat_heating)
+    ```
+
+The coefficient with seat heating is NA
