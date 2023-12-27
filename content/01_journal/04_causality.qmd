@@ -1,7 +1,39 @@
 ---
 title: "Causality"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+# Assignment
+
+1.  Load the necessary libraries:
+
+```{r}
+#load libaray
+library(ggplot2)
+
+```
+
+2.  Create a dataset with two variables:
+
+```{r}
+set.seed(123)
+n <- 100
+x_axis <- rnorm(n, mean = 50, sd = 10)
+y_axis <- 2 * x_axis + rnorm(n, mean = 0, sd = 20)
+
+data <- data.frame(x_axis, y_axis)
+
+
+```
+
+3.  Create a scatter plot
+
+    ```{r}
+    ggplot(data, aes(x = x_axis, y = y_axis)) +
+      geom_point() +
+      geom_smooth(method = "lm", se = FALSE, color = "green") +
+      labs(title = "Spurious Correlation",
+           x = " X axis",
+           y = " Y axis")
+
+    ```
