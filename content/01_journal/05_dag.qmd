@@ -1,7 +1,93 @@
 ---
 title: "Directed Acyclic Graphs"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+# Assignment
+
+1.  Draw the DAG for parking slot
+
+```{r}
+#install and load necessary package
+library("tidyverse")
+#install.packages("dagitty")
+#install.packages("ggdag")
+library(dagitty)
+library(ggdag)
+
+```
+
+```{r}
+
+# with confounder
+dag <- dagify(
+  parkingslot ~ location,
+  sales ~ location,
+  sales ~ parkingslot,
+  coords = list(x = c(parkingslot = 1, sales = 3, location = 2),
+                y = c(parkingslot = 1, sales = 1, location = 2)),
+  labels = c("ParkingSpots" = "A")
+)
+
+# Plot DAG
+ggdag(dag, text = F) +
+  geom_dag_point(color = "green")+
+  geom_dag_text(color = NA) +
+  geom_dag_edges(edge_color = "yellow") +
+  geom_dag_label_repel(aes(label = name))
+```
+
+2.  Load the data file `customer_sat.rds`.
+
+    ```{r}
+    data <- readRDS("../../Causal_Data_Science_Data/customer_sat.rds")
+    view(data)
+    ```
+
+    1.  regress `satisfaction` on `follow_ups`
+
+    ```{r}
+    regression_1 <- lm(satisfaction ~ follow_ups, data = data)
+
+    summary(regression_1)
+    ```
+
+```{=html}
+<!-- -->
+```
+2.  regress `satisfaction` on `follow_ups` and account for `subscription`
+
+    ```{r}
+
+    regression_2 <- lm(satisfaction ~ follow_ups + subscription, data = data)
+
+    summary(regression_2)
+
+
+    ```
+
+3.   Compare the coefficients and find a possible explanation.
+
+-   In the first regression,the coefficient for follow_ups is negative( -3.3093). This implies that for each additional follow-up, satisfaction decreases by 3.3093 units.
+
+-   In the second regression,the coefficient for follow_ups is now positive (2.1944), suggesting that, on average, satisfaction increases by 2.1944 units for each additional follow-up.
+
+4.  Plot the data. 
+
+```{r}
+
+not_cond <- ggplot(data, aes(x = satisfaction, y = follow_ups)) +
+  geom_point(alpha =0.8) +
+  stat_smooth(method = "lm", se = F)
+
+  
+cond <- ggplot(data, aes(x = satisfaction, y = follow_ups,
+                            color = subscription)) +
+  geom_point(alpha =0.8) +
+  stat_smooth(method = "lm", se = F) +
+  theme(legend.position = "right")
+
+# Plot both
+not_cond
+cond
+```
