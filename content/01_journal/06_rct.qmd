@@ -1,7 +1,106 @@
 ---
 title: "Randomized Controlled Trials"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+1.  Load the dataset abtest_online.rds.
+
+    ```{r}
+    data <- readRDS("../../Causal_Data_Science_Data/abtest_online.rds")
+    data
+
+
+    ```
+
+```{=html}
+<!-- -->
+```
+1.  Check whether the covariates are balanced across the groups. Use a plot to show it.
+
+```{r}
+
+library(ggplot2)
+compare_purchase_amount <- 
+  ggplot(data, 
+         aes(x = chatbot, 
+             y = purchase_amount, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "purchase_amount", title = "Difference in purchase_amount")
+
+compare_purchase <- 
+  ggplot(data, 
+         aes(x = chatbot, 
+             y = purchase, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "purchase", title = "Difference in purchase")
+  
+compare_mobile_device <- 
+  ggplot(data, 
+         aes(x = chatbot, 
+             y = mobile_device, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "mobile_device", title = "Difference in mobile_device")
+  
+compare_previous_visit <- 
+  ggplot(data, 
+         aes(x = chatbot, 
+             y = previous_visit, 
+             color = as.factor(chatbot))) +
+  stat_summary(geom = "errorbar", 
+               width = .5,
+               fun.data = "mean_se", 
+               fun.args = list(mult=1.96),
+               show.legend = F) +
+  labs(x = NULL, y = "previous_visit", title = "Difference in previous_visit")
+
+#show plots
+
+compare_purchase_amount
+compare_purchase
+compare_mobile_device
+compare_previous_visit
+
+
+
+    ```
+
+2.  Run a regression to find the effect of chatbot on sales.
+
+```{r}
+model_1 <- lm(purchase_amount ~ chatbot, data = data)
+summary(model_1)
+model_2 <- lm(purchase~ chatbot, data = data)
+summary(model_2)
+```
+
+3.  Compute a CATE for mobile device
+
+    ```{r}
+    model_3 <- lm(purchase_amount ~ chatbot * mobile_device, data = data)
+    summary(model_3)
+    model_4 <- lm(purchase_amount ~ chatbot * mobile_device + previous_visit, data = data)
+    summary(model_4)
+    ```
+
+4.  Use the outcome variable `purchase` and run a logistic regression.
+
+```{r}
+logistic_model <- glm(purchase ~ chatbot,family=binomial(link='logit'), data)
+summary(logistic_model)
+
+```
