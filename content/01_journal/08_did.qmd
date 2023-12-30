@@ -1,7 +1,68 @@
 ---
 title: "Difference-in-Differences"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+1.  Load the data from the file hospdd.rds and necessary packages
+
+```{r}
+library(tidyverse)
+library(dplyr)
+
+```
+
+1\.
+
+```{r}
+
+# Load the dataset
+hospdd <- readRDS("../../Causal_Data_Science_Data/hospdd.rds")
+
+# Manually compute the mean satisfaction for 0 and 0 procedures before and after the treatment
+means <- hospdd %>%
+  group_by(procedure, frequency) %>%
+  summarize(mean_satisfaction = mean(satis))
+
+# Print the means
+print(means)
+
+# Extract mean satisfaction for 0 procedures before and after
+mean_satisfaction_0_before <-
+  hospdd %>% filter(procedure == "0", frequency >=4)%>% 
+  pull(satis)
+
+mean_satisfaction_0_after <- 
+  hospdd %>% filter(procedure == "0", frequency>=4) %>% 
+  pull(satis)
+
+# Extract mean satisfaction for 0 procedures before and after
+mean_satisfaction_0_before <- 
+  hospdd %>% filter(procedure == "0", frequency <=4) %>% 
+  pull(satis)
+
+mean_satisfaction_0_after <- 
+  hospdd %>% filter(procedure == "0", frequency  <=4) %>% 
+  pull(satis)
+
+# Print the results
+cat("Mean Satisfaction for 0 procedures Before Treatment:", mean_satisfaction_0_before, "\n")
+cat("Mean Satisfaction for 0 procedures After Treatment:", mean_satisfaction_0_after, "\n")
+cat("Mean Satisfaction for 0 procedures Before Treatment:", mean_satisfaction_0_before, "\n")
+cat("Mean Satisfaction for 0 procedures After Treatment:", mean_satisfaction_0_after, "\n")
+```
+
+2.  Using a linear regression to compute and estimate:
+
+```{r}
+
+# 2.1 Linear regression with month + hospital
+lm_mh <- lm(procedure ~ month + hospital, data = hospdd)
+summary(lm_mh)
+
+# 2.2 Linear regression as.factor(month) + as.factor(hospital)
+lm_f_mh <- lm(procedure ~ as.factor(month) + as.factor(hospital), data = hospdd)
+summary(lm_f_mh)
+
+```
+
+The difference is that using **`as.factor()`** in regression explicitly treats categorical variables as factors, providing detailed estimates for each category.

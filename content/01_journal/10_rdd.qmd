@@ -1,7 +1,80 @@
 ---
 title: "Regression Discontinuity"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+
+
+Load the data set
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggdag)
+library(dagitty)
+library(rddensity)
+df <- readRDS("../../Causal_Data_Science_Data/coupon.rds")
+df
+```
+
+2.  Conduct a regression discontinuity design
+    1.  with half the bandwidth
+
+        ```{r}
+
+        # Define cut-off
+        c0 <- 60 
+        df
+        bandwidth_half  <- c0 + c(-2.5, 2.5)
+
+        # Subsets below and above threshold in specified bandwidth
+        df_bw_below <- df %>% filter(days_since_last >= bandwidth_half[1] & days_since_last < c0)
+        df_bw_above <- df %>% filter(days_since_last >= c0 & days_since_last <= bandwidth_half[2])
+
+        df_bw <- bind_rows(df_bw_above, df_bw_below)
+        dim(df_bw)
+
+        #conducting a regression discontinuity
+        rddd <- rddensity(df_bw$days_since_last, c = c0)
+        summary(rddd)
+
+        ```
+
+    2.  with double the bandwidth
+
+```{r}
+# Define cut-off
+c0 <- 60 
+df
+
+#double bandwidth
+bandwidth_double  <- c0 + c(-10, 10)
+
+# Subsets below and above threshold in specified bandwidth
+df_bw_below <- df %>% filter(days_since_last >= bandwidth_double[1] & days_since_last < c0)
+df_bw_above <- df %>% filter(days_since_last >= c0 & days_since_last <= bandwidth_double[2])
+
+df_bw <- bind_rows(df_bw_above, df_bw_below)
+dim(df_bw)
+
+#conducting a regression discontinuity
+rddd <- rddensity(df$days_since_last, c = c0)
+summary(rddd)
+
+
+```
+
+3.  Load the data and conduct a regression discontinuity with plot
+
+    ```{r}
+    # Load the shipping data
+    shipping_data <- readRDS("../../Causal_Data_Science_Data/shipping.rds")
+    shipping_data
+
+    rddd <- rddensity(shipping_data$purchase_amount, c = 30)
+    summary(rddd)
+
+    # Create a scatter plot of purchase_amount and treatment indicator
+
+    rdd_plot <- rdplotdensity(rddd, shipping_data$purchase_amount, plotN = 100)
+    ```
