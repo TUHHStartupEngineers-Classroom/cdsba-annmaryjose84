@@ -1,7 +1,72 @@
 ---
 title: "Instrumental Variables"
+author: "Annmary Jose"
 ---
 
-::: callout-note
-You can delete everything in here and start fresh.
-:::
+# Assignment
+
+Load necessary library and data set
+
+```{r}
+library(tidyverse)
+library(dplyr)
+library(ggdag)
+library(dagitty)
+
+data <- readRDS("../../Causal_Data_Science_Data/rand_enc.rds")
+data
+```
+
+1.  Draw a Dag
+
+```{r}
+
+dag <- dagify(
+  used_ftr ~ rand_enc,
+  time_spent ~ used_ftr,
+  coords = list(x = c(rand_enc = 1, used_ftr = 2, time_spent = 3),
+                y = c(rand_enc = 1, used_ftr = 1, time_spent = 1))
+)
+
+# Plot DAG
+ggdag(dag, text = F) +
+  geom_dag_point(color = "blue")+
+  geom_dag_text(color = NA) +
+  geom_dag_edges(edge_color = "black") +
+  geom_dag_label_repel(aes(label = name))
+```
+
+2.  Compute the naive, biased estimate.
+
+```{r}
+
+model_biased <- lm(time_spent ~ used_ftr, data = data)
+summary(model_biased)
+
+model_naive <- lm(rand_enc ~ used_ftr, data = data)
+summary(model_naive)
+
+```
+
+-   **Model 1**: When the new feature is used, the model estimates an increase of approximately 10.82 units in the time spent on the app, compared to when the feature is not used.
+
+-   **Model 2**: When the new feature is used, the model estimates an increase in the probability of being encouraged by approximately 0.21.
+
+    2.  Argue whether instrumental variable estimation is an adequate procedure.
+
+```{r}
+
+cor(data$rand_enc, data$used_ftr)
+```
+
+The positive correlation between **`rand_enc`** and **`used_ftr`** suggests relevance, a key assumption for instrumental variable estimation.
+
+4.  Compute the IV estimate using 2SLS and compare it to the naive estimate
+
+```{r}
+
+library(estimatr)
+model_iv <- iv_robust(time_spent ~ used_ftr | rand_enc, data = data)
+summary(model_iv)
+
+```
